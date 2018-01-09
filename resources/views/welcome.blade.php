@@ -13,9 +13,7 @@
     <body>
         <div id="app">
             <timer timestamp="{{ time() + 3310 }}"></timer>
-            <div class="button">
-                <button>Kaart</button>
-            </div>
+            <card></card>
         </div>
         <script type="text/javascript" src="{{ mix('js/app.js') }}"></script>
     </body>
