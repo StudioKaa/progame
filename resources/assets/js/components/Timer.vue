@@ -1,5 +1,7 @@
 <template>
-    <p>{{ time.h | two_digits }}:{{ time.m | two_digits }}:{{ time.s | two_digits }}</p>
+    <div class="timer">
+        <h2>{{ time.h | two_digits }}:{{ time.m | two_digits }}:{{ time.s | two_digits }}</h2>
+    </div>
 </template>
 
 <script>
