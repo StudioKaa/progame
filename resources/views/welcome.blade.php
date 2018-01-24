@@ -1,3 +1,7 @@
+<?php
+    //BIJ AANPASSEN SECPERSEC: actual_end wordt automatisch juist geupdate!! Het klopt dat virtual_hours gelijk blijft. De virtuele tijd is even lang, maar de werkelijke tijd tikt sneller richting het virtuele eind.
+?>
+
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
@@ -12,12 +16,9 @@
     </head>
     <body>
         <div id="app">
-            <timer timestamp="{{ time() + 3310 }}"></timer>
-            <card></card>
+            <timer :actual_end="{{ $actual_end }}" :secpersec="{{ $secpersec }}" :daysperweek="{{ $daysperweek }}" :hoursperday="{{ $hoursperday }}"></timer>
+        <card></card>
         </div>
         <script type="text/javascript" src="{{ mix('js/app.js') }}"></script>
     </body>
-    
-    
-    
 </html>

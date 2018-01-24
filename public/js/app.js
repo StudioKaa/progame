@@ -1677,14 +1677,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
-    props: ['timestamp'],
+    props: ['actual_end', 'secpersec', 'daysperweek', 'hoursperday'],
 
     data: function data() {
         return {
+
             time: {
+                w: 0,
+                d: 0,
                 h: 0,
                 m: 0,
                 s: 0
@@ -1694,43 +1713,92 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
 
-    computed: {
-
-        then: function then() {
-            return this.timestamp * 1000;
-        }
-
-    },
-
     methods: {
 
         tick: function tick() {
-            var difference = this.difference();
-            if (difference < 0) {
-                clearInterval(this.timer);
-                difference = 0;
-            }
 
-            this.time.h = Math.floor(difference / 3600);
-            this.time.m = Math.floor(difference % 3600 / 60);
-            this.time.s = difference % 3600 % 60;
-        },
+            var actual_delta = this.actual_end * 1000 - Date.now();
+            var virtual_delta = actual_delta * this.secpersec;
 
-        difference: function difference() {
-            var diff = this.then - new Date().getTime();
-            return Math.round(diff / 1000);
+            this.time.w = Math.floor(virtual_delta / (1000 * 60 * 60 * this.hoursperday * this.daysperweek) % 8);
+            this.time.d = Math.floor(virtual_delta / (1000 * 60 * 60 * this.hoursperday) % this.daysperweek);
+            this.time.h = Math.floor(virtual_delta / (1000 * 60 * 60) % this.hoursperday);
+            this.time.m = Math.floor(virtual_delta / (1000 * 60) % 60);
+            this.time.s = Math.round(virtual_delta / 1000 % 60);
         }
 
     },
 
     mounted: function mounted() {
 
+        this.tick();
+
         var self = this;
         this.timer = window.setInterval(function () {
             self.tick();
-        }, 1000);
+        }, 100);
     }
 });
+
+//     export default {
+
+//         props: ['actual_end', 'secpersec', 'daysperweek', 'hoursperday'],
+
+//         data: function () {
+//             return{
+//                 time_left: 0,
+//                 secsperweek: 0,
+//                 secsperday: 0,
+
+//                 time: {
+//                     w: 0,
+//                     d: 0,
+//                     h: 0,
+//                     m: 0
+//                 },
+
+//                 timer: null
+//             }
+//         },
+
+//         methods: {
+
+//             tick: function() {
+
+//                 this.time_left--;
+//                 if(this.time_left <= 0)
+//                 {
+//                     clearInterval(this.timer);
+//                     this.time_left = 0;
+//                 }
+
+//                 this.time.w = Math.floor(this.time_left / this.secsperweek);
+//                 this.time.d = Math.floor(this.time_left % this.secsperweek / this.secsperday);
+//                 this.time.h = Math.floor(this.time_left % this.secsperday / 3600); 
+//                 this.time.m = Math.floor(this.time_left % this.secsperday % 3600 / 60); 
+
+//             },
+
+//         },
+
+//         mounted() {
+
+//             this.secsperweek = this.hoursperday * this.daysperweek * 3600;
+//             this.secsperday = this.hoursperday * 3600;
+
+//             //calculate time_left
+//             this.time_left = (this.actual_end - Date.now()/1000) * this.secpersec;
+//             var frequency = Math.round(1 / this.secpersec * 1000);
+//             this.tick();
+
+//             //set-up timer
+//             const self = this;
+//             this.timer = window.setInterval(function () {
+//                 self.tick();
+//             }, frequency);
+
+//         }
+//     }
 
 /***/ }),
 
@@ -19455,14 +19523,32 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "timer" }, [
-    _c("h2", [
-      _vm._v(
-        _vm._s(_vm._f("two_digits")(_vm.time.h)) +
-          ":" +
-          _vm._s(_vm._f("two_digits")(_vm.time.m)) +
-          ":" +
-          _vm._s(_vm._f("two_digits")(_vm.time.s))
-      )
+    _c("div", { staticClass: "timer-vertical" }, [
+      _c("div", { staticClass: "time" }, [_vm._v(_vm._s(_vm.time.w))]),
+      _vm._v(" "),
+      _c("div", { staticClass: "label" }, [_vm._v("weken")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "time" }, [_vm._v(_vm._s(_vm.time.d))]),
+      _vm._v(" "),
+      _c("div", { staticClass: "label" }, [_vm._v("dagen")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "time" }, [
+        _vm._v(_vm._s(_vm._f("two_digits")(_vm.time.h)))
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "label" }, [_vm._v("uur")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "time" }, [
+        _vm._v(_vm._s(_vm._f("two_digits")(_vm.time.m)))
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "label" }, [_vm._v("minuten")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "time" }, [
+        _vm._v(_vm._s(_vm._f("two_digits")(_vm.time.s)))
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "label" }, [_vm._v("seconden")])
     ])
   ])
 }
